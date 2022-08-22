@@ -1,3 +1,4 @@
+# PolySMart
 # Introduction
 PolySMart is a python package which is designed to perform a reactive MD simulation in GROMACS MD package using MARTINI coarse-grain 
 forcefield. It is specially designed to perform polymerization and crosslinking process in order to generate the topology of the 
