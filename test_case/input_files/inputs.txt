@@ -1,0 +1,5 @@
+1   4   1000   93.75   COH
+CGM_PEG.itp   CGM_DesmodurN.itp
+600    400
+COH   1   NCO   1
+COH     NCO   0.25   0.4   1.0   TN3   SP4   0.3   15000

@@ -1,0 +1,3 @@
+N1a    N1a    SN4    2    150    200
+SN4aq  SN4    N1a    2    170    100
+SN4    N1a    SN4    2    140    80

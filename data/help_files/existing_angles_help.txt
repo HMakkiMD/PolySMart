@@ -1,0 +1,3 @@
+***Replace each line with three bead types of the existing angle that should be modified after reaction, function type, the new equilibrium
+   value and constant, respectively.
+   (example: SN4 SN2a SN4 100 50)***
