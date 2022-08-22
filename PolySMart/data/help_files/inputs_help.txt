@@ -1,0 +1,14 @@
+Line1***Replace this line with no. of the beginning loop, threads, maximum no. of loops, conversion, reference bead for conversion, 
+        solvent (according to its .itp file name), and its number (if you have), respectively separated with space. 
+        (example: '1 3 100 95 ROH water 100 ethanol 200')***
+Line2***Replace this line with reactant itp file names respectively separated with space. 
+        (example: 'reactant1.itp reactant2.itp')***
+Line3***Replace this line with no. of each reacting molecule (attributed to line 2), respectively separated with space. 
+        (example: '100 150')***
+Line4***Replace this line with reactant bead names in reactant molecules and their reaction capacity, respectively.
+        (example: 'NCO 1 ROH 1')***
+Line5***Replace this line with the first possible reaction between beads, minimum and maximum distance between the beads for reaction,
+        possibility of the reaction (between 0 and 1), type of the first and second bead after reaction, equilibrium distance and 
+        the constant of the newly formed bond, respectively.
+        (example: 'NCO ROH 0.2 0.6 0.75 SP2 SN3 0.29 40000')***
+Line6 and etc.***Next possible reactions (if exists), same as Line5

@@ -1,0 +1,6 @@
+1   3   1000   95   ROH   water   10000
+reactant1.itp   reactant2.itp
+100   150
+MEL   2   ROH   1
+MEL    ROH   0.2   0.6   1.00   SP3   SN4   0.30   50000
+1MEL   ROH   0.2   0.5   1.00   SP2   SN3   0.33   45000
