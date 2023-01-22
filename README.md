@@ -9,4 +9,5 @@ short equilibration. These steps are iterated until a specified condition is sat
 ## User Guides
 [How to Use](https://github.com/HMakkiMD/PolySMart/wiki/How-to-Use)\
 [Outputs](https://github.com/HMakkiMD/PolySMart/wiki/Outputs)\
+[Prerequisite](https://github.com/HMakkiMD/PolySMart/wiki/Prerequisite)\
 [Test Case](https://github.com/HMakkiMD/PolySMart/wiki/Test-Case)
