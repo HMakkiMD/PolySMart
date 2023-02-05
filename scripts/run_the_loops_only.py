@@ -139,11 +139,9 @@ while conversion[ref_index] < conv:
     # edit .gro and .itp files after reaction
     from edit_gro_itp import edit_gro_itp
     os.system(f'cp ../md/md{i-1}.gro ../md/temp.gro')
-    edit_gro_itp('../XL.txt', f'../md/md{i-1}.gro', '../product.itp', f'../loops/loop{i}.txt')
+    edit_gro_itp('../XL.txt', '../md/temp.gro', '../product.itp', f'../loops/loop{i}.txt')
     # run the relaxation step
     os.system(f'sh post_relax.sh {i-1} {threads} {time}')
-    os.system(f'../md/temp.gro cp ../md/md{i-1}.gro')
-    os.system('rm ../md/temp.gro')
     
     # find the number of reactions took place so far, and calculate the conversion
     with open(f'../loops/loop{i}.txt') as f:
