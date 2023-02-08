@@ -36,7 +36,11 @@ def find_distance(filename, file1, file2, minimum, maximum, prob, out_path):
                 coord1 = (float(line1[2]), float(line1[3]), float(line1[4]))
             else:
                 coord1 = (float(line1[3]), float(line1[4]), float(line1[5]))
-            for j in range(len(list2)):
+            if file1 == file2:
+                beg = i + 1
+            else:
+                beg = 0
+            for j in range(beg, len(list2)):
                 line2 = filelist[int(list2[j])+1].split() # line attributed to bead no. j
                 if line1[0] != line2[0]:
                     # find coordinates of 2 beads and calculate the distance between them
