@@ -132,9 +132,17 @@ while conversion[ref_index] < conv:
                         with open(f'../XL_temp{k}.txt') as g:
                             temp = g.readlines()
                         f.writelines(temp)
+            os.system(f'cp ../XL_noprob.txt ../XL_noprob_temp{j-3}.txt')
+            if j == len(l)-1:
+                with open('../XL_noprob.txt' , 'w') as f:
+                    for k in range(1, len(l)-3):
+                        with open(f'../XL_noprob_temp{k}.txt') as g:
+                            temp = g.readlines()
+                        f.writelines(temp)
     if len(l) > 5:
         for j in range(1, len(l)-3):
             os.system(f'rm ../XL_temp{j}.txt')
+            os.system(f'rm ../XL_noprob_temp{j}.txt')
 
     # edit .gro and .itp files after reaction
     from edit_gro_itp import edit_gro_itp
