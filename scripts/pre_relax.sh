@@ -15,3 +15,4 @@ gmx mdrun -v -deffnm ../min/eq0 -nt $1
 gmx grompp -f ../data/martini_run.mdp -c ../min/eq0.gro -t ../min/eq0.cpt -p ../topol.top -o ../md/md0.tpr
 gmx mdrun -v -deffnm ../md/md0 -nt $1
 cp ../md/md0.gro ../data/mixture_raw.gro
+cp ../product.itp ../itp/loop0.itp
