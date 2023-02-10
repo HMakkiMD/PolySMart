@@ -4,6 +4,9 @@
 # $3 = time
 source /usr/local/gromacs/bin/GMXRC
 cp ../product.itp ../itp/loop$(($1+1)).itp
+if [ -f "../md/md$(($1+1)).gro" ]; then
+    rm ../md/md$(($1+1)).gro
+fi
 gmx grompp -f ../data/martini_em.mdp -c ../md/temp.gro -p ../topol.top -o ../min/min$(($1+1)).tpr -maxwarn 1
 gmx mdrun -v -deffnm ../min/min$(($1+1)) -nt $2
 gmx grompp -f ../data/martini_eqxl.mdp -c ../min/min$(($1+1)).gro -p ../topol.top -o ../md/md$(($1+1)).tpr
