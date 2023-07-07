@@ -8,7 +8,8 @@ How to run:
 def edit_gro_itp(XL, gro_filename, itp_filename, loop_x):
     from itp_merge import table_format_string7
     from itp_merge import table_format_string8
-
+    from random import random
+    
     # read lines of input.txt and assign parameters
     with open('../data/inputs.txt') as f:
         lis = f.readlines()
@@ -17,6 +18,17 @@ def edit_gro_itp(XL, gro_filename, itp_filename, loop_x):
     with open(XL) as f:
         xlfilelist = f.readlines() # read the reacting pairs file
     length = len(xlfilelist)
+    
+    try:
+        with open('../data/break.txt') as f:
+            pass
+    except FileNotFoundError:
+        pass
+    else:
+        with open('../data/break.txt') as f:
+            br = f.readlines()
+            for i in range(len(br)):
+                br[i] = br[i].split()
     
     with open(itp_filename , 'r') as f:
         i, bond_line, angle_line, dihedral_line, constraint_line, virtual_line, \
@@ -38,6 +50,7 @@ def edit_gro_itp(XL, gro_filename, itp_filename, loop_x):
                 exclusion_line = i
             i += 1
         end_line = i - 1
+        
         # make a new list consisting all bonds and constraints
         if bond_line != 0:  # find the end line of bonds
             if angle_line == 0:
@@ -159,6 +172,10 @@ def edit_gro_itp(XL, gro_filename, itp_filename, loop_x):
             filelist.insert(int(items[l][0])+2, section_format %(line[0],beadname1,line[2],line[3],'4'+line[4][1:],*line[5:len(line)],))
         filelist.pop(int(items[l][0])+3)
         line = filelist[int(items[l][1])+2].split()
+        if len(line) == 7:
+            section_format = table_format_string7
+        elif len(line) == 8:
+            section_format = table_format_string8
         if (line[4][0] != '1') and (line[4][0] != '2') and (line[4][0] != '3'): # if the bead is reacting for first time
             filelist.insert(int(items[l][1])+2, section_format %(line[0],beadname2,line[2],line[3],'1'+line[4],*line[5:len(line)],))
         elif line[4][0] == '1': # if the bead is reacting for second time(for beads that can react more than one time)
@@ -545,7 +562,147 @@ def edit_gro_itp(XL, gro_filename, itp_filename, loop_x):
         delete.reverse()
         for l in range(len(delete)):
             filelist.pop(delete[l])
+    
+        i, bond_line, angle_line, dihedral_line, constraint_line, virtual_line, \
+            exclusion_line = 0,0,0,0,0,0,0
+        for line in filelist:
+            if '[ bonds ]' in line:
+                bond_line = i
+            if '[ angles ]' in line:
+                angle_line = i
+            if '[ dihedrals ]' in line and dihedral_line == 0:
+                dihedral_line = i
+            if '[ constraints ]' in line:
+                constraint_line = i
+            if '[ virtual_sitesn ]' in line:
+                virtual_line = i
+            if '[ exclusions ]' in line:
+                exclusion_line = i
+            i += 1
+        end_line = i - 1
         
+        br_ind = []   # list containing atoms of breaking bonds
+        br_index = []
+        del_list = []  # list containing line no.s that should be deleted
+        
+        if bond_line != 0:
+            j = bond_line
+            while ('[' not in filelist[j+1]) and (j+1 != end_line+1):
+                for k in range(len(br)):
+                    if (filelist[int(filelist[j+1].split()[0])+2].split()[4] == br[k][0] and \
+                        filelist[int(filelist[j+1].split()[1])+2].split()[4] == br[k][1]) or \
+                       (filelist[int(filelist[j+1].split()[0])+2].split()[4] == br[k][1] and \
+                        filelist[int(filelist[j+1].split()[1])+2].split()[4] == br[k][0]):
+                        if random() <= float(br[k][2]):
+                            del_list.append(j+1)
+                            br_index.append(filelist[j+1].split()[0])
+                            br_index.append(filelist[j+1].split()[1])
+                            br_ind.append({filelist[j+1].split()[0],filelist[j+1].split()[1]})
+                j += 1
+            
+        if constraint_line != 0:
+            j = constraint_line
+            while ('[' not in filelist[j+1]) and (j+1 != end_line+1):
+                for k in range(len(br)):
+                    if (filelist[int(filelist[j+1].split()[0])+2].split()[4] == br[k][0] and \
+                        filelist[int(filelist[j+1].split()[1])+2].split()[4] == br[k][1]) or \
+                       (filelist[int(filelist[j+1].split()[0])+2].split()[4] == br[k][1] and \
+                        filelist[int(filelist[j+1].split()[1])+2].split()[4] == br[k][0]):
+                        if random() <= float(br[k][2]):
+                            del_list.append(j+1)
+                            br_index.append(filelist[j+1].split()[0])
+                            br_index.append(filelist[j+1].split()[1])
+                            br_ind.append({filelist[j+1].split()[0],filelist[j+1].split()[1]})
+                j += 1
+        
+        with open('../last_broken_bonds.txt', 'w') as f:
+            for j in range(len(del_list)):
+                f.write('%-7s   %-7s \n' %(filelist[del_list[j]].split()[0], filelist[del_list[j]].split()[1]))
+        
+        if angle_line != 0:
+            j = angle_line
+            while ('[' not in filelist[j+1]) and (j+1 != end_line+1):
+                aa = {filelist[j+1].split()[0],filelist[j+1].split()[1],filelist[j+1].split()[2]}
+                for k in range(len(br_ind)):
+                    if len(aa.intersection(br_ind[k])) == 2:
+                        del_list.append(j+1)
+                j += 1
+        
+        if dihedral_line != 0:
+            j = dihedral_line
+            while ('[' not in filelist[j+1]) and (j+1 != end_line+1):
+                aa = {filelist[j+1].split()[0],filelist[j+1].split()[1],filelist[j+1].split()[2],filelist[j+1].split()[3]}
+                for k in range(len(br_ind)):
+                    if len(aa.intersection(br_ind[k])) == 2:
+                        del_list.append(j+1)
+                j += 1
+        
+        if exclusion_line != 0:
+            j = exclusion_line
+            while ('[' not in filelist[j+1]) and (j+1 != end_line):
+                aa = set()
+                for k in range(len(filelist[j+1].split())):
+                    aa.add(filelist[j+1].split()[k])
+                for k in range(len(br_ind)):
+                    if len(aa.intersection(br_ind[k])) == 2:
+                        del_list.append(j+1)
+                j += 1
+        
+        del_list.sort()
+        del_list.reverse()
+        for j in del_list:
+            filelist.pop(j)
+
+    # edit .gro file
+    with open(gro_filename , 'r+') as f:
+        f.readline() # pass the first two lines of .gro file
+        f.readline()
+        counter = f.tell() # starting point for bead lines
+        for k in range(len(br_index)):
+            f.seek(counter+10+45*(int(br_index[k])-1)) # position of the bead name
+            sp = f.readline().split()
+            f.seek(counter+10+45*(int(br_index[k])-1))
+            # check if the bead had been reacted in previous steps (for beads that can react more than one time)
+            if sp[0][0] == '1':
+                new_bead_name = sp[0][1:]
+                if (int(br_index[k]) > 9999) and (int(br_index[k]) < 100000):
+                    new_bead_name = new_bead_name[:-5]
+                f.write('%5s' %(new_bead_name))
+            elif sp[0][0] == '2':
+                new_bead_name = '1'+sp[0][1:]
+                if (int(br_index[k]) > 9999) and (int(br_index[k]) < 100000):
+                    new_bead_name = new_bead_name[:-5]
+                f.write('%5s' %(new_bead_name))
+            elif sp[0][0] == '3':
+                new_bead_name = '2'+sp[0][1:]
+                if (int(br_index[k]) > 9999) and (int(br_index[k]) < 100000):
+                    new_bead_name = new_bead_name[:-5]
+                f.write('%5s' %(new_bead_name))
+            elif sp[0][0] == '4':
+                new_bead_name = '3'+sp[0][1:]
+                if (int(br_index[k]) > 9999) and (int(br_index[k]) < 100000):
+                    new_bead_name = new_bead_name[:-5]
+                f.write('%5s' %(new_bead_name))
+
+    # edit .itp file
+    # edit [atoms] section of itp file
+    for l in range(len(br_index)):
+        line = filelist[int(br_index[l])+2].split()
+        if len(line) == 7:
+            section_format = table_format_string7
+        elif len(line) == 8:
+            section_format = table_format_string8
+        if line[4][0] == '1': # if the bead is reacting for second time(for beads that can react more than one time)
+            filelist.insert(int(br_index[l])+2, section_format %(line[0],beadname1,line[2],line[3],line[4][1:],*line[5:len(line)],))
+        elif line[4][0] == '2': # if the bead is reacting for third time(for beads that can react more than one time)
+            filelist.insert(int(br_index[l])+2, section_format %(line[0],beadname1,line[2],line[3],'1'+line[4][1:],*line[5:len(line)],))
+        elif line[4][0] == '3': # if the bead is reacting for second time(for beads that can react more than one time)
+            filelist.insert(int(br_index[l])+2, section_format %(line[0],beadname1,line[2],line[3],'2'+line[4][1:],*line[5:len(line)],))
+        elif line[4][0] == '4': # if the bead is reacting for second time(for beads that can react more than one time)
+            filelist.insert(int(br_index[l])+2, section_format %(line[0],beadname1,line[2],line[3],'3'+line[4][1:],*line[5:len(line)],))
+        filelist.pop(int(br_index[l])+3)
+
+
     # write the edited file list to itp file
     with open(itp_filename , 'w') as f:
         f.writelines(filelist)
