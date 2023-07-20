@@ -693,13 +693,13 @@ def edit_gro_itp(XL, gro_filename, itp_filename, loop_x):
         elif len(line) == 8:
             section_format = table_format_string8
         if line[4][0] == '1': # if the bead is reacting for second time(for beads that can react more than one time)
-            filelist.insert(int(br_index[l])+2, section_format %(line[0],beadname1,line[2],line[3],line[4][1:],*line[5:len(line)],))
+            filelist.insert(int(br_index[l])+2, section_format %(line[0],line[1],line[2],line[3],line[4][1:],*line[5:len(line)],))
         elif line[4][0] == '2': # if the bead is reacting for third time(for beads that can react more than one time)
-            filelist.insert(int(br_index[l])+2, section_format %(line[0],beadname1,line[2],line[3],'1'+line[4][1:],*line[5:len(line)],))
+            filelist.insert(int(br_index[l])+2, section_format %(line[0],line[1],line[2],line[3],'1'+line[4][1:],*line[5:len(line)],))
         elif line[4][0] == '3': # if the bead is reacting for second time(for beads that can react more than one time)
-            filelist.insert(int(br_index[l])+2, section_format %(line[0],beadname1,line[2],line[3],'2'+line[4][1:],*line[5:len(line)],))
+            filelist.insert(int(br_index[l])+2, section_format %(line[0],line[1],line[2],line[3],'2'+line[4][1:],*line[5:len(line)],))
         elif line[4][0] == '4': # if the bead is reacting for second time(for beads that can react more than one time)
-            filelist.insert(int(br_index[l])+2, section_format %(line[0],beadname1,line[2],line[3],'3'+line[4][1:],*line[5:len(line)],))
+            filelist.insert(int(br_index[l])+2, section_format %(line[0],line[1],line[2],line[3],'3'+line[4][1:],*line[5:len(line)],))
         filelist.pop(int(br_index[l])+3)
 
 
