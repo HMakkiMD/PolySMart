@@ -3,7 +3,6 @@ Edit .gro and .itp file after each loop of reaction.
 
 How to run:
     > python3 edit_gro_itp.py 'XL'.txt 'filename'.gro 'filename'.itp 'loop_x'.txt
-30.03.2022
 """
 def edit_gro_itp(XL, gro_filename, itp_filename, loop_x):
     from itp_merge import table_format_string7
@@ -18,6 +17,8 @@ def edit_gro_itp(XL, gro_filename, itp_filename, loop_x):
     with open(XL) as f:
         xlfilelist = f.readlines() # read the reacting pairs file
     length = len(xlfilelist)
+    
+    br = []
     
     try:
         with open('../data/break.txt') as f:
@@ -563,6 +564,7 @@ def edit_gro_itp(XL, gro_filename, itp_filename, loop_x):
         for l in range(len(delete)):
             filelist.pop(delete[l])
     
+    if br != []:
         i, bond_line, angle_line, dihedral_line, constraint_line, virtual_line, \
             exclusion_line = 0,0,0,0,0,0,0
         for line in filelist:
@@ -652,55 +654,55 @@ def edit_gro_itp(XL, gro_filename, itp_filename, loop_x):
         del_list.reverse()
         for j in del_list:
             filelist.pop(j)
-
-    # edit .gro file
-    with open(gro_filename , 'r+') as f:
-        f.readline() # pass the first two lines of .gro file
-        f.readline()
-        counter = f.tell() # starting point for bead lines
-        for k in range(len(br_index)):
-            f.seek(counter+10+45*(int(br_index[k])-1)) # position of the bead name
-            sp = f.readline().split()
-            f.seek(counter+10+45*(int(br_index[k])-1))
-            # check if the bead had been reacted in previous steps (for beads that can react more than one time)
-            if sp[0][0] == '1':
-                new_bead_name = sp[0][1:]
-                if (int(br_index[k]) > 9999) and (int(br_index[k]) < 100000):
-                    new_bead_name = new_bead_name[:-5]
-                f.write('%5s' %(new_bead_name))
-            elif sp[0][0] == '2':
-                new_bead_name = '1'+sp[0][1:]
-                if (int(br_index[k]) > 9999) and (int(br_index[k]) < 100000):
-                    new_bead_name = new_bead_name[:-5]
-                f.write('%5s' %(new_bead_name))
-            elif sp[0][0] == '3':
-                new_bead_name = '2'+sp[0][1:]
-                if (int(br_index[k]) > 9999) and (int(br_index[k]) < 100000):
-                    new_bead_name = new_bead_name[:-5]
-                f.write('%5s' %(new_bead_name))
-            elif sp[0][0] == '4':
-                new_bead_name = '3'+sp[0][1:]
-                if (int(br_index[k]) > 9999) and (int(br_index[k]) < 100000):
-                    new_bead_name = new_bead_name[:-5]
-                f.write('%5s' %(new_bead_name))
-
-    # edit .itp file
-    # edit [atoms] section of itp file
-    for l in range(len(br_index)):
-        line = filelist[int(br_index[l])+2].split()
-        if len(line) == 7:
-            section_format = table_format_string7
-        elif len(line) == 8:
-            section_format = table_format_string8
-        if line[4][0] == '1': # if the bead is reacting for second time(for beads that can react more than one time)
-            filelist.insert(int(br_index[l])+2, section_format %(line[0],line[1],line[2],line[3],line[4][1:],*line[5:len(line)],))
-        elif line[4][0] == '2': # if the bead is reacting for third time(for beads that can react more than one time)
-            filelist.insert(int(br_index[l])+2, section_format %(line[0],line[1],line[2],line[3],'1'+line[4][1:],*line[5:len(line)],))
-        elif line[4][0] == '3': # if the bead is reacting for second time(for beads that can react more than one time)
-            filelist.insert(int(br_index[l])+2, section_format %(line[0],line[1],line[2],line[3],'2'+line[4][1:],*line[5:len(line)],))
-        elif line[4][0] == '4': # if the bead is reacting for second time(for beads that can react more than one time)
-            filelist.insert(int(br_index[l])+2, section_format %(line[0],line[1],line[2],line[3],'3'+line[4][1:],*line[5:len(line)],))
-        filelist.pop(int(br_index[l])+3)
+        
+        # edit .gro file
+        with open(gro_filename , 'r+') as f:
+            f.readline() # pass the first two lines of .gro file
+            f.readline()
+            counter = f.tell() # starting point for bead lines
+            for k in range(len(br_index)):
+                f.seek(counter+10+45*(int(br_index[k])-1)) # position of the bead name
+                sp = f.readline().split()
+                f.seek(counter+10+45*(int(br_index[k])-1))
+                # check if the bead had been reacted in previous steps (for beads that can react more than one time)
+                if sp[0][0] == '1':
+                    new_bead_name = sp[0][1:]
+                    if (int(br_index[k]) > 9999) and (int(br_index[k]) < 100000):
+                        new_bead_name = new_bead_name[:-5]
+                    f.write('%5s' %(new_bead_name))
+                elif sp[0][0] == '2':
+                    new_bead_name = '1'+sp[0][1:]
+                    if (int(br_index[k]) > 9999) and (int(br_index[k]) < 100000):
+                        new_bead_name = new_bead_name[:-5]
+                    f.write('%5s' %(new_bead_name))
+                elif sp[0][0] == '3':
+                    new_bead_name = '2'+sp[0][1:]
+                    if (int(br_index[k]) > 9999) and (int(br_index[k]) < 100000):
+                        new_bead_name = new_bead_name[:-5]
+                    f.write('%5s' %(new_bead_name))
+                elif sp[0][0] == '4':
+                    new_bead_name = '3'+sp[0][1:]
+                    if (int(br_index[k]) > 9999) and (int(br_index[k]) < 100000):
+                        new_bead_name = new_bead_name[:-5]
+                    f.write('%5s' %(new_bead_name))
+        
+        # edit .itp file
+        # edit [atoms] section of itp file
+        for l in range(len(br_index)):
+            line = filelist[int(br_index[l])+2].split()
+            if len(line) == 7:
+                section_format = table_format_string7
+            elif len(line) == 8:
+                section_format = table_format_string8
+            if line[4][0] == '1': # if the bead is reacting for second time(for beads that can react more than one time)
+                filelist.insert(int(br_index[l])+2, section_format %(line[0],line[1],line[2],line[3],line[4][1:],*line[5:len(line)],))
+            elif line[4][0] == '2': # if the bead is reacting for third time(for beads that can react more than one time)
+                filelist.insert(int(br_index[l])+2, section_format %(line[0],line[1],line[2],line[3],'1'+line[4][1:],*line[5:len(line)],))
+            elif line[4][0] == '3': # if the bead is reacting for second time(for beads that can react more than one time)
+                filelist.insert(int(br_index[l])+2, section_format %(line[0],line[1],line[2],line[3],'2'+line[4][1:],*line[5:len(line)],))
+            elif line[4][0] == '4': # if the bead is reacting for second time(for beads that can react more than one time)
+                filelist.insert(int(br_index[l])+2, section_format %(line[0],line[1],line[2],line[3],'3'+line[4][1:],*line[5:len(line)],))
+            filelist.pop(int(br_index[l])+3)
 
 
     # write the edited file list to itp file
