@@ -2,7 +2,7 @@
 # $1 = i-1
 # $2 = threads
 # $3 = time
-source /usr/local/gromacs/bin/GMXRC
+#source /usr/local/gromacs/bin/GMXRC
 cp ../product.itp ../itp/loop$(($1+1)).itp
 if [ -f "../md/md$(($1+1)).gro" ]; then
     rm ../md/md$(($1+1)).gro
