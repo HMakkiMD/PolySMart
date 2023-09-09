@@ -1,6 +1,6 @@
 # run a relaxation for system before entering loops
 # $1 = threads
-source /usr/local/gromacs/bin/GMXRC
+#source /usr/local/gromacs/bin/GMXRC
 
 cp ../product.itp ../data/product_raw.itp
 mkdir ../loops
