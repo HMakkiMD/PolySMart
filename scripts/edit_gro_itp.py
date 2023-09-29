@@ -3,25 +3,28 @@ Edit .gro and .itp file after each loop of reaction.
 
 How to run:
     > python3 edit_gro_itp.py 'XL'.txt 'filename'.gro 'filename'.itp 'loop_x'.txt
-09.09.2023
+29.09.2023
 """
 def edit_gro_itp(XL, gro_filename, itp_filename, loop_x):
     from itp_merge import table_format_string7
     from itp_merge import table_format_string8
     from random import random
     import os
-    
+
     # read lines of input.txt and assign parameters
     with open('../data/inputs.txt') as f:
         lis = f.readlines()
-        for i in range(4, len(lis)):
-            lis[i] = lis[i].split()        
+        for i in range(len(lis)-1,3,-1):
+            lis[i] = lis[i].split()
+            if lis[i] == []:
+                lis.pop(i)
+
     with open(XL) as f:
         xlfilelist = f.readlines() # read the reacting pairs file
     length = len(xlfilelist)
-    
+
     br = []   # a list containing break information
-    
+
     # read bond breaking information (if existed)
     try:
         with open('../data/break.txt') as f:
@@ -31,11 +34,13 @@ def edit_gro_itp(XL, gro_filename, itp_filename, loop_x):
     else:
         with open('../data/break.txt') as f:
             br = f.readlines()
-            for i in range(len(br)):
+            for i in range(len(br)-1,-1,-1):
                 br[i] = br[i].split()
-    
+                if br[i] == []:
+                    br.pop(i)
+
     ex = []   # a list containing break information
-    
+
     # read bond exchange information (if existed)
     try:
         with open('../data/exchange.txt') as f:
@@ -45,8 +50,10 @@ def edit_gro_itp(XL, gro_filename, itp_filename, loop_x):
     else:
         with open('../data/exchange.txt') as f:
             ex = f.readlines()
-            for i in range(len(ex)):
+            for i in range(len(ex)-1,-1,-1):
                 ex[i] = ex[i].split()
+                if ex[i] == []:
+                    ex.pop(i)
 
     
     with open(itp_filename , 'r') as f:
