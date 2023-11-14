@@ -1,3 +1,2 @@
-N1a    N1a    SN4    C1    1    0    0.0   1
-SN4aq  SN4    N1a    C1    1    0    0.0   1
-SN4    N1a    SN4    C1    1    0    0.0   1
+1AAA    BBB    CCC    DDD    1    0    0.0   1
+2AAA    BBB    CCC    DDD    1    0    0.2.  1
