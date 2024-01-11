@@ -23,3 +23,4 @@ fi
 rm ../md/#md$(($1+1)).gro.1#
 rm ../min/#min$(($1+1)).gro.1#
 rm ../md/temp.gro
+rm *.pdb > /dev/null 2>&1
