@@ -56,8 +56,8 @@ with open('../data/martini_run.mdp') as f:
             dt = li[i].split()[2]
         elif li[i].split()[0] == 'nsteps':
             steps = li[i].split()[2]
-    time = int(float(dt)*int(steps)) - int(float(dt)*1000)
-os.system(f'echo 0 | gmx trjconv -f ../md/md0.xtc -s ../md/md0.tpr -o ../md/md0.gro -b {time} -e {time}')
+    time = int(float(dt)*int(steps)) #- int(float(dt)*1000)
+os.system(f'echo 0 | gmx trjconv -f ../md/md0.xtc -s ../md/md0.tpr -o ../md/md0.gro -dump {time}')
 os.system('rm ../md/#md0.gro.1#')
 # find the maximum number of reactions that can be done for each reactive bead (for calculating conversion)
 from find_index import find_index
@@ -79,7 +79,7 @@ with open('../data/martini_eqxl.mdp') as f:
             dt = le[i].split()[2]
         elif le[i].split()[0] == 'nsteps':
             steps = le[i].split()[2]
-    time = int(float(dt)*int(steps)) - int(float(dt)*1000)
+    time = int(float(dt)*int(steps)) #- int(float(dt)*1000)
 
 # editing all_loops.txt and conversion.xvg in case you start the loops again from some previous loops
 try:
