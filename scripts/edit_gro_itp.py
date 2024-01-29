@@ -14,10 +14,13 @@ def edit_gro_itp(XL, gro_filename, itp_filename, loop_x):
     # read lines of input.txt and assign parameters
     with open('../data/inputs.txt') as f:
         lis = f.readlines()
-        for i in range(len(lis)-1,3,-1):
+        for i in range(len(lis)):
             lis[i] = lis[i].split()
-            if lis[i] == []:
-                lis.pop(i)
+        if lis[i][0] == ';' or lis[i][0] == '#':
+            lis[i] = []
+    for i in range(len(lis)-1,-1,-1):
+        if lis[i] == []:
+            lis.pop(i)
 
     with open(XL) as f:
         xlfilelist = f.readlines() # read the reacting pairs file
