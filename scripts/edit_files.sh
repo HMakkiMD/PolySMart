@@ -7,7 +7,7 @@ if [ $1 -eq 1 ]
 then
 	cp ../data/product_raw.itp ../product.itp
 else
-	echo 0 | gmx trjconv -f ../md/md$(($1-1)).xtc -s ../md/md$(($1-1)).tpr -o ../md/md$(($1-1)).gro -b $2 -e $2
+	echo 0 | gmx trjconv -f ../md/md$(($1-1)).xtc -s ../md/md$(($1-1)).tpr -o ../md/md$(($1-1)).gro -dump $2
 	rm ../md/#md$(($1-1)).gro.1# > /dev/null 2>&1
 	rm ../md/md$1.*** > /dev/null 2>&1
 	rm ../loops/loop$1.txt > /dev/null 2>&1
