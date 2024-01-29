@@ -4,6 +4,7 @@
 # $3 = time
 #source /usr/local/gromacs/bin/GMXRC
 cp ../product.itp ../itp/loop$(($1+1)).itp
+mkdir ../min  > /dev/null 2>&1
 if [ -f "../md/md$(($1+1)).gro" ]; then
     rm ../md/md$(($1+1)).gro
 fi
