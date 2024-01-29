@@ -15,6 +15,11 @@ with open('../data/inputs.txt') as f:
     l = f.readlines()
     for i in range(len(l)):
         l[i] = l[i].split()
+        if l[i][0] == ';' or l[i][0] == '#':
+            l[i] = []
+    for i in range(len(l)-1,-1,-1):
+        if l[i] == []:
+            l.pop(i)
     begin_loop = int(l[0][0])
     threads = l[0][1]
     cycles = int(l[0][2])
@@ -189,3 +194,10 @@ while conversion[ref_index] < conv:
         break
     else:
         i += 1
+os.system('rm -r ../min  > /dev/null 2>&1')
+os.system('mkdir ../min  > /dev/null 2>&1')
+os.system('rm ../md/*.edr  > /dev/null 2>&1')
+os.system('rm ../md/*.tpr  > /dev/null 2>&1')
+os.system('rm ../md/*.xtc  > /dev/null 2>&1')
+os.system('rm ../md/*.cpt  > /dev/null 2>&1')
+os.system('rm ../md/*.log  > /dev/null 2>&1')
