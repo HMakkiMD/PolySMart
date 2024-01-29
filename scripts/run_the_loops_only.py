@@ -195,7 +195,6 @@ while conversion[ref_index] < conv:
     else:
         i += 1
 os.system('rm -r ../min  > /dev/null 2>&1')
-os.system('mkdir ../min  > /dev/null 2>&1')
 os.system('rm ../md/*.edr  > /dev/null 2>&1')
 os.system('rm ../md/*.tpr  > /dev/null 2>&1')
 os.system('rm ../md/*.xtc  > /dev/null 2>&1')
