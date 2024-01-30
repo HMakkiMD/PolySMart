@@ -167,10 +167,15 @@ while conversion[ref_index] < conv:
             n[j] = 0
         for j in range(len(co)):
             for k in range(len(n)):
-                if (reactant_bead[k] in co[j].split()) or \
-                    ('1'+reactant_bead[k] in co[j].split()) or \
-                        ('2'+reactant_bead[k] in co[j].split()) or \
-                            ('3'+reactant_bead[k] in co[j].split()):
+                if (reactant_bead[k] == co[j].split()[0]) or \
+                    ('1'+reactant_bead[k] == co[j].split()[0]) or \
+                        ('2'+reactant_bead[k] == co[j].split()[0]) or \
+                            ('3'+reactant_bead[k] == co[j].split()[0]):
+                    n[k] += 1
+                if (reactant_bead[k] == co[j].split()[2]) or \
+                    ('1'+reactant_bead[k] == co[j].split()[2]) or \
+                        ('2'+reactant_bead[k] == co[j].split()[2]) or \
+                            ('3'+reactant_bead[k] == co[j].split()[2]):
                     n[k] += 1
 
     for j in range(len(n)):
