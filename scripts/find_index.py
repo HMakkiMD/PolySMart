@@ -4,7 +4,7 @@ and make new file named 'beadname.txt' containing indices.
 
 How to run:
     > python3 find_index.py 'filename'.gro 'Your bead name' 'reaction_capacity'    
-11.03.2022
+31.01.2024
 """
 
 def find_index(filename, index, reaction_capacity):
@@ -12,21 +12,17 @@ def find_index(filename, index, reaction_capacity):
         l = f.readlines()
         with open('../'+index+'.txt', 'w') as g:
             for i in range(2,len(l)):
-                st = l[i].split()
-                if (i > 10000) and (i < 100001):
-                    temp = st.copy()
-                    st[1], st[2] = temp[1][:-5], temp[1][-5:]
                 if reaction_capacity == 1:
-                    if index in st:
+                    if index == l[i][10:15].split()[0]:
                         g.write(f'{i-1}\n')
                 elif reaction_capacity == 2:
-                    if (index in st) or ('1'+index in st):
+                    if l[i][10:15].split()[0] in [index,'1'+index]:
                         g.write(f'{i-1}\n')
                 elif reaction_capacity == 3:
-                    if (index or '1'+index or '2'+index) in st:
+                    if l[i][10:15].split()[0] in [index,'1'+index,'2'+index]:
                         g.write(f'{i-1}\n')
                 elif reaction_capacity == 4:
-                    if (index or '1'+index or '2'+index or '3'+index) in st:
+                    if l[i][10:15].split()[0] in [index,'1'+index,'2'+index,'3'+index]:
                         g.write(f'{i-1}\n')
 
 if __name__ == '__main__':
