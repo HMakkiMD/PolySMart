@@ -131,7 +131,7 @@ def itp_merge(type_no, file_paths, numbers, out_path):
                                             write_section(header, block, y, z, at_no, add, flag, g)
                                 flag = True
                 add += numbers[m] * at_no
-                addr += numbers[m] * (m + 1)
+                addr += numbers[m] #* (m + 1)
         g.write(' ')
     # check that there is solvent in system or not to make .top file
     try:
@@ -143,6 +143,8 @@ def itp_merge(type_no, file_paths, numbers, out_path):
         flag2 = True
         with open('../data/inputs.txt') as g:
             inp_line = g.readline().split()
+            while inp_line == []:
+                inp_line = g.readline().split()
         try:
             inp_line[5], inp_line[6]
         except IndexError:
