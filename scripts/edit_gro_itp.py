@@ -3,7 +3,7 @@ Edit .gro and .itp file after each loop of reaction.
 
 How to run:
     > python3 edit_gro_itp.py 'XL'.txt 'filename'.gro 'filename'.itp 'loop_x'.txt
-29.09.2023
+31.01.2024
 """
 def edit_gro_itp(XL, gro_filename, itp_filename, loop_x):
     from itp_merge import table_format_string7
@@ -389,24 +389,16 @@ def edit_gro_itp(XL, gro_filename, itp_filename, loop_x):
             f.seek(counter+10+45*(int(itemslist[k])-1))
             # check if the bead had been reacted in previous steps (for beads that can react more than one time)
             if (sp[0][0] != '1') and (sp[0][0] != '2') and (sp[0][0] != '3'):
-                new_bead_name = '1'+sp[0]
-                if (int(itemslist[k]) > 9999) and (int(itemslist[k]) < 100000):
-                    new_bead_name = new_bead_name[:-5]
+                new_bead_name = '1'+sp[0][:5]
                 f.write('%5s' %(new_bead_name))
             elif sp[0][0] == '1':
-                new_bead_name = '2'+sp[0][1:]
-                if (int(itemslist[k]) > 9999) and (int(itemslist[k]) < 100000):
-                    new_bead_name = new_bead_name[:-5]
+                new_bead_name = '2'+sp[0][1:5]
                 f.write('%5s' %(new_bead_name))
             elif sp[0][0] == '2':
-                new_bead_name = '3'+sp[0][1:]
-                if (int(itemslist[k]) > 9999) and (int(itemslist[k]) < 100000):
-                    new_bead_name = new_bead_name[:-5]
+                new_bead_name = '3'+sp[0][1:5]
                 f.write('%5s' %(new_bead_name))
             elif sp[0][0] == '3':
-                new_bead_name = '4'+sp[0][1:]
-                if (int(itemslist[k]) > 9999) and (int(itemslist[k]) < 100000):
-                    new_bead_name = new_bead_name[:-5]
+                new_bead_name = '4'+sp[0][1:5]
                 f.write('%5s' %(new_bead_name))
 
     # edit .itp file
