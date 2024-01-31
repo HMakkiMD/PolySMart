@@ -5,7 +5,7 @@ lower than a maximum and higher than a minimum.
 
 How to run:
     > python3 find_distance.py 'filename'.gro 'bead name1'.txt 'bead name2'.txt 'min_distance' 'max_distance' 'probability' 'output.txt'
-11.03.2022
+31.01.2024
 """
 import math
 from random import random
@@ -31,23 +31,17 @@ def find_distance(filename, file1, file2, minimum, maximum, prob, out_path):
             pass
 
         for i in range(len(list1)):
-            line1 = filelist[int(list1[i])+1].split() # line attributed to bead no. i
-            if (int(list1[i]) < 100001) and (int(list1[i]) > 9999):
-                coord1 = (float(line1[2]), float(line1[3]), float(line1[4]))
-            else:
-                coord1 = (float(line1[3]), float(line1[4]), float(line1[5]))
+            line1 = filelist[int(list1[i])+1] # line attributed to bead no. i
+            coord1 = (float(line1[20:28]), float(line1[28:36]), float(line1[36:44]))
             if file1 == file2:
                 beg = i + 1
             else:
                 beg = 0
             for j in range(beg, len(list2)):
-                line2 = filelist[int(list2[j])+1].split() # line attributed to bead no. j
-                if line1[0] != line2[0]:
+                line2 = filelist[int(list2[j])+1] # line attributed to bead no. j
+                if line1[:5] != line2[:5]:
                     # find coordinates of 2 beads and calculate the distance between them
-                    if (int(list2[j]) < 100001) and (int(list2[j]) > 9999):
-                        coord2 = (float(line2[2]), float(line2[3]), float(line2[4]))
-                    else:
-                        coord2 = (float(line2[3]), float(line2[4]), float(line2[5]))
+                    coord2 = (float(line2[20:28]), float(line2[28:36]), float(line2[36:44]))
                     dist = math.sqrt((coord1[0]-coord2[0])**2+(coord1[1]-coord2[1])**2+(coord1[2]-coord2[2])**2)
                     if dist < maximum and dist > minimum: # check if the distance is in desired range
                         with open(out_path[:-4]+'_noprob.txt', 'a') as g:
