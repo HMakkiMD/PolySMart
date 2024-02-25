@@ -14,14 +14,16 @@ gmx grompp -f ../data/martini_eqxl.mdp -c ../min/min$(($1+1)).gro -p ../topol.to
 gmx mdrun -v -deffnm ../md/md$(($1+1)) -nt $2
 if [ -f "../md/md$(($1+1)).gro" ]; then
     echo 0 | gmx trjconv -f ../md/md$(($1+1)).xtc -s ../md/md$(($1+1)).tpr -o ../md/md$(($1+1)).gro -dump $3
-else
+else 
+    rm ../md/md$(($1+1)).*
     gmx grompp -f ../data/martini_eqxl1.mdp -c ../min/min$(($1+1)).gro -p ../topol.top -o ../md/eq$(($1+1)).tpr -maxwarn 1
-    gmx mdrun -v -deffnm ../md/eq$(($1+1)) -nt $2
-    gmx grompp -f ../data/martini_eqxl.mdp -c ../md/eq$(($1+1)).gro -p ../topol.top -o ../md/md$(($1+1)).tpr
-    gmx mdrun -v -deffnm ../md/md$(($1+1)) -nt $2
-    echo 0 | gmx trjconv -f ../md/md$(($1+1)).xtc -s ../md/md$(($1+1)).tpr -o ../md/md$(($1+1)).gro -dump $3
+	gmx mdrun -v -deffnm ../md/eq$(($1+1)) -nt $2
+	gmx grompp -f ../data/martini_eqxl.mdp -c ../md/eq$(($1+1)).gro -p ../topol.top -o ../md/md$(($1+1)).tpr
+	gmx mdrun -v -deffnm ../md/md$(($1+1)) -nt $2
+	rm ../md/eq$(($1+1)).*
+	echo 0 | gmx trjconv -f ../md/md$(($1+1)).xtc -s ../md/md$(($1+1)).tpr -o ../md/md$(($1+1)).gro -dump $3
 fi
-rm ../md/#md$(($1+1)).gro.1#
-rm ../min/#min$(($1+1)).gro.1#
-rm ../md/temp.gro
+rm ../md/#md$(($1+1)).gro.1#  > /dev/null 2>&1
+rm ../min/#min$(($1+1)).gro.1#  > /dev/null 2>&1
+rm ../md/temp.gro  > /dev/null 2>&1
 rm *.pdb > /dev/null 2>&1
