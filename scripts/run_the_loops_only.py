@@ -15,7 +15,7 @@ with open('../data/inputs.txt') as f:
     l = f.readlines()
     for i in range(len(l)):
         l[i] = l[i].split()
-        if l[i][0] == ';' or l[i][0] == '#':
+        if l[i][0][0] == ';' or l[i][0][0] == '#':
             l[i] = []
     for i in range(len(l)-1,-1,-1):
         if l[i] == []:
@@ -61,7 +61,8 @@ with open('../data/martini_run.mdp') as f:
             dt = li[i].split()[2]
         elif li[i].split()[0] == 'nsteps':
             steps = li[i].split()[2]
-    time = int(float(dt)*int(steps)) #- int(float(dt)*1000)
+    time = int(float(dt)*int(steps))
+    
 os.system(f'echo 0 | gmx trjconv -f ../md/md0.xtc -s ../md/md0.tpr -o ../md/md0.gro -dump {time}')
 os.system('rm ../md/#md0.gro.1#')
 # find the maximum number of reactions that can be done for each reactive bead (for calculating conversion)
@@ -73,18 +74,6 @@ max_reactions = []
 for i in range(len(l[3])//2):
     with open(f'../{reactant_bead[i]}.txt') as f:
         max_reactions.append(int(len(f.readlines()))*int(reactant_bead_no[i]))
-
-# finding the time of equlibration in loops (in ps) for trjconv
-with open('../data/martini_eqxl.mdp') as f:
-    le = f.readlines()
-    for i in range(len(le)):
-        if le[i].split() == []:
-            pass
-        elif le[i].split()[0] == 'dt':
-            dt = le[i].split()[2]
-        elif le[i].split()[0] == 'nsteps':
-            steps = le[i].split()[2]
-    time = int(float(dt)*int(steps)) #- int(float(dt)*1000)
 
 # editing all_loops.txt and conversion.xvg in case you start the loops again from some previous loops
 try:
@@ -122,6 +111,17 @@ while conversion[ref_index] < conv:
     # find all reacting beads in the system
     for j in range(len(reactant_bead)):
         find_index(f'../md/md{i-1}.gro', f'{reactant_bead[j]}', 1)
+
+    with open(f'../md/md{i-1}.log') as f:
+        le = f.readlines()
+        for j in range(len(le)):
+            if le[j].split() == []:
+                pass
+            elif le[j].split()[0] == 'dt':
+                dt = le[j].split()[2]
+            elif le[j].split()[0] == 'nsteps':
+                steps = le[j].split()[2]
+        time = int(float(dt)*int(steps))
 
     os.system(f'sh edit_files.sh {i} {time}')
         
@@ -161,22 +161,18 @@ while conversion[ref_index] < conv:
         with open('../loops/all_loops.txt', 'a') as g:
             ls = f.readlines()
             g.writelines(ls)
-        with open('../loops/all_loops.txt') as g:
+        with open(f'../itp/loop{i}.itp') as g:
             co = g.readlines()
         for j in range(len(n)):
             n[j] = 0
-        for j in range(len(co)):
+        j = 3
+        while '[' not in co[j]:
             for k in range(len(n)):
-                if (reactant_bead[k] == co[j].split()[0]) or \
-                    ('1'+reactant_bead[k] == co[j].split()[0]) or \
-                        ('2'+reactant_bead[k] == co[j].split()[0]) or \
-                            ('3'+reactant_bead[k] == co[j].split()[0]):
+                if ('1'+reactant_bead[k] == co[j].split()[4]) or \
+                        ('2'+reactant_bead[k] == co[j].split()[4]) or \
+                            ('3'+reactant_bead[k] == co[j].split()[4]):
                     n[k] += 1
-                if (reactant_bead[k] == co[j].split()[2]) or \
-                    ('1'+reactant_bead[k] == co[j].split()[2]) or \
-                        ('2'+reactant_bead[k] == co[j].split()[2]) or \
-                            ('3'+reactant_bead[k] == co[j].split()[2]):
-                    n[k] += 1
+            j += 1
 
     for j in range(len(n)):
         try:
@@ -199,9 +195,9 @@ while conversion[ref_index] < conv:
         break
     else:
         i += 1
-os.system('rm -r ../min  > /dev/null 2>&1')
-os.system('rm ../md/*.edr  > /dev/null 2>&1')
-os.system('rm ../md/*.tpr  > /dev/null 2>&1')
-os.system('rm ../md/*.xtc  > /dev/null 2>&1')
-os.system('rm ../md/*.cpt  > /dev/null 2>&1')
-os.system('rm ../md/*.log  > /dev/null 2>&1')
+#os.system('rm -r ../min  > /dev/null 2>&1')
+#os.system('rm ../md/*.edr  > /dev/null 2>&1')
+#os.system('rm ../md/*.tpr  > /dev/null 2>&1')
+#os.system('rm ../md/*.xtc  > /dev/null 2>&1')
+#os.system('rm ../md/*.cpt  > /dev/null 2>&1')
+#os.system('rm ../md/*.log  > /dev/null 2>&1')
