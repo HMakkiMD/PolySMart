@@ -3,7 +3,7 @@ Edit .gro and .itp file after each loop of reaction.
 
 How to run:
     > python3 edit_gro_itp.py 'XL'.txt 'filename'.gro 'filename'.itp 'loop_x'.txt
-31.01.2024
+26.02.2024
 """
 def edit_gro_itp(XL, gro_filename, itp_filename, loop_x):
     from itp_merge import table_format_string7
@@ -16,7 +16,7 @@ def edit_gro_itp(XL, gro_filename, itp_filename, loop_x):
         lis = f.readlines()
         for i in range(len(lis)):
             lis[i] = lis[i].split()
-        if lis[i][0] == ';' or lis[i][0] == '#':
+        if lis[i][0][0] == ';' or lis[i][0][0] == '#':
             lis[i] = []
     for i in range(len(lis)-1,-1,-1):
         if lis[i] == []:
@@ -39,10 +39,10 @@ def edit_gro_itp(XL, gro_filename, itp_filename, loop_x):
             br = f.readlines()
             for i in range(len(br)-1,-1,-1):
                 br[i] = br[i].split()
-                if br[i] == []:
+                if br[i] == [] or br[i][0][0] == ';' or br[i][0][0] == '#':
                     br.pop(i)
 
-    ex = []   # a list containing break information
+    ex = []   # a list containing exchange information
 
     # read bond exchange information (if existed)
     try:
@@ -55,7 +55,7 @@ def edit_gro_itp(XL, gro_filename, itp_filename, loop_x):
             ex = f.readlines()
             for i in range(len(ex)-1,-1,-1):
                 ex[i] = ex[i].split()
-                if ex[i] == []:
+                if ex[i] == [] or ex[i][0][0] == ';' or ex[i][0][0] == '#':
                     ex.pop(i)
 
     
@@ -140,38 +140,36 @@ def edit_gro_itp(XL, gro_filename, itp_filename, loop_x):
                     xlfilelist[m].split()[0],xlfilelist[m].split()[2])) # add reacting pairs to a list
         itemslist.append(xlfilelist[m].split()[1]) # add reacting beads to a list
         itemslist.append(xlfilelist[m].split()[3]) # add reacting beads to a list
-    # write a file containing modified reacting pairs
 
+    # write a file containing modified reacting pairs
     if ex == []:
         with open(loop_x , 'w') as f:
             f.writelines(xlfilelist)
 
-    
     # exchange section
     exch_items = []
     exch_itemslist = []
     if ex != []:
-        
+
         from find_distance import find_distance
         from find_index import find_index
-        
+
         xlfilelist2 = []
         for j in range(len(ex)):
             find_index(gro_filename, ex[j][0], 1)
             if ex[j][0] != ex[j][1]:
                 find_index(gro_filename, ex[j][1], 1)
-        
+
             find_distance(gro_filename, f'../{ex[j][0]}.txt', f'../{ex[j][1]}.txt', \
             float(ex[j][2]), float(ex[j][3]), float(ex[j][4]), '../exchange_points.txt')
-        
+
             with open('../exchange_points.txt') as f:
                 xlfilelist3 = f.readlines() # read the reacting pairs file
             os.system('rm ../exchange_points.txt')
             os.system('rm ../exchange_points_noprob.txt')
             xlfilelist2 += xlfilelist3
-        '''
+
         delete = set() # used set instead of list to not keep duplicates
-        
         # check for beads which are near to two reacting beads and keep only the first one
         for i in range(len(xlfilelist2)):
             line1 = xlfilelist2[i].split()
@@ -187,11 +185,14 @@ def edit_gro_itp(XL, gro_filename, itp_filename, loop_x):
         delete.reverse()
         for n in range(len(delete)):
             xlfilelist2.pop(delete[n]) # delete repetitious beads from reacting pairs list
-        '''
+
         another_ex_pairs = []
         del_bond = []
+
         # find the another new bond for each of exchange pairs
-        for m in range(len(xlfilelist2)):
+        for m in range(len(xlfilelist2)-1,-1,-1):
+            flag3 = False
+            temp1 , temp2 = [] , []
             for n in range(len(bonds_list)):
                 if (xlfilelist2[m].split()[1] == bonds_list[n].split()[0] and \
                     filelist[int(xlfilelist2[m].split()[3])+2].split()[4] == filelist[int(bonds_list[n].split()[1])+2].split()[4]):
@@ -201,6 +202,7 @@ def edit_gro_itp(XL, gro_filename, itp_filename, loop_x):
                     filelist[int(xlfilelist2[m].split()[3])+2].split()[4] == filelist[int(bonds_list[n].split()[0])+2].split()[4]):
                     temp1 = bonds_list[n].split()[0]
                     del_bond.append([xlfilelist2[m].split()[1],temp1])
+
                 if (xlfilelist2[m].split()[3] == bonds_list[n].split()[0] and \
                     filelist[int(xlfilelist2[m].split()[1])+2].split()[4] == filelist[int(bonds_list[n].split()[1])+2].split()[4]):
                     temp2 = bonds_list[n].split()[1]
@@ -209,8 +211,18 @@ def edit_gro_itp(XL, gro_filename, itp_filename, loop_x):
                     filelist[int(xlfilelist2[m].split()[1])+2].split()[4] == filelist[int(bonds_list[n].split()[0])+2].split()[4]):
                     temp2 = bonds_list[n].split()[0]
                     del_bond.append([xlfilelist2[m].split()[3],temp2])
-            another_ex_pairs.append((temp1,temp2))
 
+            if temp1 != [] and temp2 != []:
+                another_ex_pairs.append((temp1,temp2))
+                flag3 = True
+            elif (temp1 == [] and temp2 != []) or (temp1 != [] and temp2 == []):
+                del_bond.pop()
+                
+            if flag3 == False:
+                xlfilelist2.pop(m)
+
+        another_ex_pairs.reverse()
+        del_bond.reverse()
         for m in range(len(xlfilelist2)):
             xlfilelist2.insert(2*m+1, '%-7s\t %7s\t %-7s\t %7s\n' %(xlfilelist2[2*m].split()[0], another_ex_pairs[m][0], xlfilelist2[2*m].split()[2], another_ex_pairs[m][1]))
 
@@ -220,11 +232,23 @@ def edit_gro_itp(XL, gro_filename, itp_filename, loop_x):
             line1 = xlfilelist2[i].split()
             if {line1[1], line1[3]} in bonds_set:
                 delete.add(i)
+                try:
+                    xlfilelist2[i].split()[4]
+                except IndexError:
+                    delete.add(i-1)
+                else:
+                    delete.add(i+1)
             else:
                 for k in range(i+1,len(xlfilelist2)):
                     line2 = xlfilelist2[k].split()
                     if line1[1] == line2[1] or line1[3] == line2[3] or line1[1] == line2[3] or line1[3] == line2[1]:
                         delete.add(k) # set of repetitious beads which should be deleted
+                        try:
+                            xlfilelist2[k].split()[4]
+                        except IndexError:
+                            delete.add(k-1)
+                        else:
+                            delete.add(k+1)
         delete = list(delete)
         delete.sort()
         delete.reverse()
@@ -243,28 +267,33 @@ def edit_gro_itp(XL, gro_filename, itp_filename, loop_x):
         # check for beads which are near to two reacting beads and keep only the first one
         for i in range(len(xlfilelist)):
             line1 = xlfilelist[i].split()
-            for k in range(i+1,len(xlfilelist)):
+            for k in range(len(xlfilelist)-len(xlfilelist2)+i+1,len(xlfilelist)):
                 line2 = xlfilelist[k].split()
                 if line1[1] == line2[1] or line1[3] == line2[3] or line1[1] == line2[3] or line1[3] == line2[1]:
                     delete.add(k) # set of repetitious beads which should be deleted
+                    try:
+                        xlfilelist[k].split()[4]
+                    except IndexError:
+                        delete.add(k-1)
+                    else:
+                        delete.add(k+1)
         delete = list(delete)
         delete.sort()
         delete.reverse()
         for n in range(len(delete)):
             xlfilelist.pop(delete[n]) # delete repetitious beads from reacting pairs list
+            del_bond.pop(delete[n]-(len(xlfilelist)-len(xlfilelist2)))
 
         # write a file containing modified reacting pairs
         with open(loop_x , 'w') as f:
             f.writelines(xlfilelist)
-
-
 
         ex_ind = []   # list containing bonds that should be deleted
         del_list = []  # list containing line no.s that should be deleted
         
         if bond_line != 0:
             j = bond_line
-            while ('[' not in filelist[j+1]) and (j+1 != end_line+1):
+            while ('[' not in filelist[j+1]) and (j+1 != end_line):
                 for k in range(len(del_bond)):
                     if (filelist[j+1].split()[0] == del_bond[k][0] and \
                         filelist[j+1].split()[1] == del_bond[k][1]) or \
@@ -272,11 +301,12 @@ def edit_gro_itp(XL, gro_filename, itp_filename, loop_x):
                         filelist[j+1].split()[1] == del_bond[k][0]):
                         del_list.append(j+1)
                         ex_ind.append({filelist[j+1].split()[0],filelist[j+1].split()[1]})
+                        break
                 j += 1
             
         if constraint_line != 0:
             j = constraint_line
-            while ('[' not in filelist[j+1]) and (j+1 != end_line+1):
+            while ('[' not in filelist[j+1]) and (j+1 != end_line):
                 for k in range(len(del_bond)):
                     if (filelist[j+1].split()[0] == del_bond[k][0] and \
                         filelist[j+1].split()[1] == del_bond[k][1]) or \
@@ -288,7 +318,7 @@ def edit_gro_itp(XL, gro_filename, itp_filename, loop_x):
         
         if angle_line != 0:
             j = angle_line
-            while ('[' not in filelist[j+1]) and (j+1 != end_line+1):
+            while ('[' not in filelist[j+1]) and (j+1 != end_line):
                 aa = {filelist[j+1].split()[0],filelist[j+1].split()[1],filelist[j+1].split()[2]}
                 for k in range(len(ex_ind)):
                     if len(aa.intersection(ex_ind[k])) == 2:
@@ -297,7 +327,7 @@ def edit_gro_itp(XL, gro_filename, itp_filename, loop_x):
         
         if dihedral_line != 0:
             j = dihedral_line
-            while ('[' not in filelist[j+1]) and (j+1 != end_line+1):
+            while ('[' not in filelist[j+1]) and (j+1 != end_line):
                 aa = {filelist[j+1].split()[0],filelist[j+1].split()[1],filelist[j+1].split()[2],filelist[j+1].split()[3]}
                 for k in range(len(ex_ind)):
                     if len(aa.intersection(ex_ind[k])) == 2:
@@ -315,6 +345,7 @@ def edit_gro_itp(XL, gro_filename, itp_filename, loop_x):
                         del_list.append(j+1)
                 j += 1
         
+        del_list = list(set(del_list))  # to delete duplicates
         del_list.sort()
         del_list.reverse()
         for j in del_list:
