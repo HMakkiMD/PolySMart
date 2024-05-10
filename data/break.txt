@@ -1,1 +1,1 @@
-1MEL    1ROH    0.5
+1AAA    1BBB    0.5
