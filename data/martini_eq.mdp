@@ -16,8 +16,8 @@ title                    = Martini ('new' parameters for) NPT eq
 ; Time steps smaller than 20 fs are not required unless specifically stated in the itp file.
 
 integrator               = md
-dt                       = 0.005
-nsteps                   = 200000 ; 1000ps
+dt                       = 0.002
+nsteps                   = 500000 ; 1000ps
 nstcomm                  = 100
 comm-grps		       = 
 
