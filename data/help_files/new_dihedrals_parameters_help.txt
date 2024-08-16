@@ -1,3 +1,3 @@
-***Replace each line with four bead types of the new dihedral, function type, equilibrium angle, dihedral constant, and multiplicity
+***Replace each line with four bead names of the new dihedral, function type, equilibrium angle, dihedral constant, and multiplicity
    (if exist), respectively.
-   (example: SP1 SN1 TC2 C1 1 120 80 2)***
+   (example: 1AAA BBB CCC DDD 1 120 80 2)***
