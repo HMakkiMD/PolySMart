@@ -1,2 +1,2 @@
-***Replace each line with three bead types of the new angle, function type, equilibrium angle, and angle constant, respectively.
-   (example: SP1 SN1 TC2 2 120 80)***
+***Replace each line with three bead names of the new angle, function type, equilibrium angle, and angle constant, respectively.
+   (example: 1AAA BBB CCC 2 120 80)***
