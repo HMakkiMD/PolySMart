@@ -1,0 +1,3 @@
+Line1***Replace this line with the bead names of the bond you want to break and the breaking probability, respectively separated with space.
+        (example: '1AA    BB    0.5')***
+Line2 and etc.***Next possible breaks (if exists), same as Line1

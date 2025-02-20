@@ -1,0 +1,4 @@
+Line1***Replace this line with the bead names you want to be exchanged their bonds, minimum and maximum distance between the beads for exchange,
+        possibility of the exchange (between 0 and 1), equilibrium distance and the constant of the newly formed bond, respectively.
+        (example: 'AA    BB   0.3   0.4   1.00   0.30   50000')***
+Line2 and etc.***Next possible exchanges (if exists), same as Line1
