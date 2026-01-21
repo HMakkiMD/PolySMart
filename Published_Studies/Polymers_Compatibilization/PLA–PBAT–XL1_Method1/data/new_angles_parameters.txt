@@ -1,0 +1,10 @@
+C2H2    1DAZ   1CCH4    2   124.8   50
+CCH4    1CCH4  1DAZ     2    96.2   80
+COO     1CCH4  1DAZ     2    94.8  120
+CF3     1DAZ   1CCH4    2    87.1  140
+C2H21   1COO   1COO     2   106.4  300
+C2H22   1COO   1COO     2   161    300
+C2H2    1COO   1COO     2   138     90
+C2H2    1DAZ   1CCH3    2   121     70
+CF3     1DAZ   1CCH3    2   101    150
+1DAZ    1CCH3  PCOO     2   115    100

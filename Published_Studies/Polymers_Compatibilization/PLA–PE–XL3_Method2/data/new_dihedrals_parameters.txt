@@ -1,0 +1,4 @@
+1C2H4    1DAZ   C2H21   CF3    2     115    5
+C2H21    1COO   1COO    C2H21  1       0    5   2
+1COO     C2H21  1DAZ    CF3    1   0    14    2
+1COO     C2H21   DAZ    CF3    1   0    14    2

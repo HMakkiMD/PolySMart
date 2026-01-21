@@ -1,0 +1,16 @@
+#include "martini_v3.0.0-mod24.itp"
+
+;Include resin and melamine topologies
+#include "pe-martini-136.itp"
+#include "udc-martini.itp"
+#include "pla-martini-104.itp"
+
+[ system ]
+; Name
+PLA-PE-UDC
+[ molecules ]
+; Compound #mols
+PLA  1170
+UDC  200
+PET  1170
+UDC  200

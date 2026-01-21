@@ -1,0 +1,6 @@
+1   1   1000   1000   DAZ
+pla-martini-104.itp CLD-martini.itp PBAT3-martini-117.itp CLD-martini.itp
+1170 200 1170 200
+DAZ   1   CCH4  1  CCH3   1
+DAZ    CCH4    0.37525   0.41475  1.00   TC4   TC1    0.268    25000
+DAZ    CCH3    0.37525   0.41475  1.00   TC4   TC3    0.22     12000

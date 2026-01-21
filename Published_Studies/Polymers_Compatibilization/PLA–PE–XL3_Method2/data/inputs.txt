@@ -1,0 +1,6 @@
+1   1   1000   1000   DAZ
+pla-martini-104.itp udc-martini.itp  pe-martini-136.itp   udc-martini.itp
+1170   200    1170    200
+DAZ   1   CCH3  1  C2H4   1
+DAZ    CCH3    0.37525   0.41475  1.00   TC4   TC3    0.22     12000
+DAZ    C2H4    0.37525   0.41475  1.00   TC4   TC3    0.252    14800

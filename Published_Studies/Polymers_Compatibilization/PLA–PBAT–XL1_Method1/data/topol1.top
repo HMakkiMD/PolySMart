@@ -1,0 +1,16 @@
+#include "martini_v3.0.0-mod25.itp"
+
+;Include resin and melamine topologies
+#include "PBAT3-martini-117.itp"
+#include "CLD-martini.itp"
+#include "pla-martini-104.itp"
+
+[ system ]
+; Name
+PLA-PE-CLD
+[ molecules ]
+; Compound #mols
+PLA  1170
+CLD  200
+PBAT  1170
+CLD  200
